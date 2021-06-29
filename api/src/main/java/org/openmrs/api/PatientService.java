@@ -9,10 +9,6 @@
  */
 package org.openmrs.api;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 import org.openmrs.Allergies;
 import org.openmrs.Allergy;
 import org.openmrs.Concept;
@@ -27,6 +23,10 @@ import org.openmrs.patient.IdentifierValidator;
 import org.openmrs.person.PersonMergeLogData;
 import org.openmrs.serialization.SerializationException;
 import org.openmrs.util.PrivilegeConstants;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Contains methods pertaining to Patients in the system
@@ -844,4 +844,15 @@ public interface PatientService extends OpenmrsService {
 	 * @throws PatientIdentifierTypeLockedException
 	 */
 	public void checkIfPatientIdentifierTypesAreLocked() throws PatientIdentifierTypeLockedException;
+
+	/**
+	 * Given a string, return all the patients whose given name is an exact, case-insensitive match for that string
+	 * 
+	 * @param name
+	 * @return all patients with matching given name
+	 * @should match name even if cases don't match
+	 * @should not match on family name
+	 * @should not match on partial name matches
+	 */
+	public List<Patient> getPatientsByGivenName(String name);
 }

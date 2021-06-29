@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Cohort;
+import org.openmrs.Condition;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
@@ -132,7 +133,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 			
 			Date newDate = encounter.getEncounterDatetime();
 			Location newLocation = encounter.getLocation();
-			for (Obs obs : encounter.getAllFlattenedObs(true)) {
+			for (Obs obs : encounter.getAllObs(true)) {
 				// if the date was changed
 				if (OpenmrsUtil.compare(originalDate, newDate) != 0
 				        && OpenmrsUtil.compare(obs.getObsDatetime(), originalDate) == 0) {
@@ -198,7 +199,9 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 		addGivenObsAndTheirGroupMembersToEncounter(obsToAdd, encounter);
 		
 		// save the conditions
-		encounter.getConditions().forEach(Context.getConditionService()::saveCondition);
+		encounter.getConditions().forEach(condition -> {
+			Context.getConditionService().saveCondition(condition);
+		});
 		return encounter;
 	}
 	

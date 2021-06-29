@@ -9,12 +9,10 @@
  */
 package org.openmrs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,11 +24,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.openmrs.api.EncounterService;
-import org.openmrs.test.jupiter.BaseContextMockTest;
+import org.openmrs.test.BaseContextMockTest;
 
 /**
  * This class tests the all of the {@link Encounter} non-trivial object methods.
@@ -48,7 +47,7 @@ public class EncounterTest extends BaseContextMockTest {
 
 	private Condition voidedCondition;
 
-	@BeforeEach
+	@Before
 	public void before() {
 		encounter = new Encounter();
 
@@ -93,12 +92,12 @@ public class EncounterTest extends BaseContextMockTest {
 		// add the set of obs to the encounter and make sure its there
 		Encounter encounter = new Encounter();
 		encounter.setObs(obsSet);
-		assertEquals(1, encounter.getAllObs(true).size());
-		assertTrue(encounter.getAllObs(true).contains(obsToRemove));
+		Assert.assertEquals(1, encounter.getAllObs(true).size());
+		Assert.assertTrue(encounter.getAllObs(true).contains(obsToRemove));
 		
 		// remove the obs and make sure its gone from the encounter
 		encounter.removeObs(obsToRemove);
-		assertEquals(0, encounter.getAllObs(true).size());
+		Assert.assertEquals(0, encounter.getAllObs(true).size());
 	}
 	
 	/**
@@ -121,7 +120,7 @@ public class EncounterTest extends BaseContextMockTest {
 		
 		encounterWithObsSet.setObs(obsSet);
 		// make sure the encounter got the obs
-		assertEquals(1, encounterWithObsSet.getAllObs(true).size());
+		Assert.assertEquals(1, encounterWithObsSet.getAllObs(true).size());
 		encounterWithObsSet.removeObs(null);
 	}
 	
@@ -494,57 +493,7 @@ public class EncounterTest extends BaseContextMockTest {
 		assertEquals(1, numberOfChildObs);
 		assertEquals(1, numberofParentObs);
 	}
-
-	/**
-	 * @see Encounter#getAllObs(null)
-	 */
-	@Test
-	public void getAllFlattenObs_shouldGetAllFlattenedObs() {
-		Encounter enc = new Encounter();
-
-		//create and add an Obs
-		Obs firstObs = new Obs();
-		firstObs.setValueText("firstObs");
-		enc.addObs(firstObs);
-
-		//add a child to the obs and make sure that now that the Obs is an ObsGroup with one child:
-		Obs secondObs = new Obs();
-		secondObs.setValueText("secondObs");
-		firstObs.addGroupMember(secondObs);
-
-		// add second top level obs
-		Obs thirdObs = new Obs();
-		thirdObs.setValueText("thirdObs");
-		thirdObs.setVoided(true);
-		enc.addObs(thirdObs);
-
-		// add three-level obs
-		Obs fourthObs = new Obs();
-		fourthObs.setValueText("fourthObs");
-
-		Obs fifthObs = new Obs();
-		fifthObs.setValueText("fifthObs");
-		Obs sixthObs = new Obs();
-		sixthObs.setValueText("sixthObs");
-		sixthObs.setVoided(true);
-		Obs seventhObs = new Obs();
-		seventhObs.setValueText("seventhObs");
-		fifthObs.addGroupMember(sixthObs);
-		fifthObs.addGroupMember(seventhObs);
-		fourthObs.addGroupMember(fifthObs);
-
-		enc.addObs(fourthObs);
-
-		// do the check
-		assertEquals(7, enc.getAllFlattenedObs(true).size());
-		assertTrue(enc.getAllFlattenedObs(true).contains(thirdObs));
-		assertTrue(enc.getAllFlattenedObs(true).contains(seventhObs));
-
-		assertEquals(5, enc.getAllFlattenedObs(false).size());
-		assertFalse(enc.getAllFlattenedObs(false).contains(sixthObs));
-		assertTrue(enc.getAllFlattenedObs(false).contains(secondObs));
-	}
-
+	
 	/**
 	 * @see Encounter#getAllObs(null)
 	 */
@@ -768,7 +717,7 @@ public class EncounterTest extends BaseContextMockTest {
 	@Test
 	public void Encounter_shouldSetEncounterId() {
 		Encounter encounter = new Encounter(123);
-		assertEquals(123, encounter.getEncounterId().intValue());
+		Assert.assertEquals(123, encounter.getEncounterId().intValue());
 	}
 	
 	/**
@@ -1037,7 +986,7 @@ public class EncounterTest extends BaseContextMockTest {
 		encounter.addProvider(encounterRole, provider);
 		
 		//then
-		assertTrue(encounter.getProvidersByRole(encounterRole).contains(provider));
+		Assert.assertTrue(encounter.getProvidersByRole(encounterRole).contains(provider));
 	}
 	
 	/**
@@ -1057,7 +1006,7 @@ public class EncounterTest extends BaseContextMockTest {
 		
 		//then
 		List<Provider> providers = Arrays.asList(provider1, provider2);
-		assertTrue(encounter.getProvidersByRole(role).containsAll(providers));
+		Assert.assertTrue(encounter.getProvidersByRole(role).containsAll(providers));
 	}
 	
 	/**
@@ -1079,8 +1028,8 @@ public class EncounterTest extends BaseContextMockTest {
 		// we need to cheat and use reflection to look at the private encounterProviders property; we don't want the getProvidersByRole method hiding duplicates from us
 		Collection<EncounterProvider> providers = (Collection<EncounterProvider>) FieldUtils.readField(encounter,
 		    "encounterProviders", true);
-		assertEquals(1, providers.size());
-		assertTrue(encounter.getProvidersByRole(role).contains(provider1));
+		Assert.assertEquals(1, providers.size());
+		Assert.assertTrue(encounter.getProvidersByRole(role).contains(provider1));
 	}
 	
 	/**
@@ -1100,7 +1049,7 @@ public class EncounterTest extends BaseContextMockTest {
 		Set<Provider> providers = encounter.getProvidersByRole(role2);
 		
 		//then
-		assertEquals(0, providers.size());
+		Assert.assertEquals(0, providers.size());
 	}
 	
 	/**
@@ -1118,7 +1067,7 @@ public class EncounterTest extends BaseContextMockTest {
 		Set<Provider> providers = encounter.getProvidersByRole(null);
 		
 		//then
-		assertEquals(0, providers.size());
+		Assert.assertEquals(0, providers.size());
 	}
 	
 	/**
@@ -1144,8 +1093,8 @@ public class EncounterTest extends BaseContextMockTest {
 		Set<Provider> providers = encounter.getProvidersByRole(role);
 		
 		//then
-		assertEquals(2, providers.size());
-		assertTrue(providers.containsAll(Arrays.asList(provider, provider2)));
+		Assert.assertEquals(2, providers.size());
+		Assert.assertTrue(providers.containsAll(Arrays.asList(provider, provider2)));
 	}
 	
 	/**
@@ -1171,14 +1120,14 @@ public class EncounterTest extends BaseContextMockTest {
 		Map<EncounterRole, Set<Provider>> providersByRoles = encounter.getProvidersByRoles();
 		
 		//then
-		assertEquals(2, providersByRoles.size(), "Roles");
-		assertTrue(providersByRoles.keySet().containsAll(Arrays.asList(role, role2)), "Roles");
+		Assert.assertEquals("Roles", 2, providersByRoles.size());
+		Assert.assertTrue("Roles", providersByRoles.keySet().containsAll(Arrays.asList(role, role2)));
 		
-		assertEquals(2, providersByRoles.get(role).size(), "Providers for role");
-		assertTrue(providersByRoles.get(role).containsAll(Arrays.asList(provider, provider2)), "Providers for role");
+		Assert.assertEquals("Providers for role", 2, providersByRoles.get(role).size());
+		Assert.assertTrue("Providers for role", providersByRoles.get(role).containsAll(Arrays.asList(provider, provider2)));
 		
-		assertEquals(1, providersByRoles.get(role2).size(), "Provider for role2");
-		assertTrue(providersByRoles.get(role2).contains(provider3), "Providers for role2");
+		Assert.assertEquals("Provider for role2", 1, providersByRoles.get(role2).size());
+		Assert.assertTrue("Providers for role2", providersByRoles.get(role2).contains(provider3));
 	}
 	
 	/**
@@ -1193,7 +1142,7 @@ public class EncounterTest extends BaseContextMockTest {
 		Map<EncounterRole, Set<Provider>> providersByRoles = encounter.getProvidersByRoles();
 		
 		//then
-		assertEquals(0, providersByRoles.size());
+		Assert.assertEquals(0, providersByRoles.size());
 	}
 	
 	/**
@@ -1217,8 +1166,8 @@ public class EncounterTest extends BaseContextMockTest {
 		encounter.setProvider(role, provider3);
 		
 		//then
-		assertEquals(1, encounter.getProvidersByRole(role).size());
-		assertTrue(encounter.getProvidersByRole(role).contains(provider3));
+		Assert.assertEquals(1, encounter.getProvidersByRole(role).size());
+		Assert.assertTrue(encounter.getProvidersByRole(role).contains(provider3));
 	}
 	
 	/**
@@ -1235,8 +1184,8 @@ public class EncounterTest extends BaseContextMockTest {
 		encounter.setProvider(role, provider);
 		
 		//then
-		assertEquals(1, encounter.getProvidersByRole(role).size());
-		assertTrue(encounter.getProvidersByRole(role).contains(provider));
+		Assert.assertEquals(1, encounter.getProvidersByRole(role).size());
+		Assert.assertTrue(encounter.getProvidersByRole(role).contains(provider));
 	}
 	
 	/**
@@ -1253,16 +1202,16 @@ public class EncounterTest extends BaseContextMockTest {
 		encounter.setProvider(role, provider2);
 		
 		//the size should be 1 for non voided providers
-		assertEquals(1, encounter.getProvidersByRole(role, false).size());
+		Assert.assertEquals(1, encounter.getProvidersByRole(role, false).size());
 		
 		//should contain the second provider since the first was voided.
-		assertTrue(encounter.getProvidersByRole(role, false).contains(provider2));
+		Assert.assertTrue(encounter.getProvidersByRole(role, false).contains(provider2));
 		
 		//the size should be 2 if we include voided providers
-		assertEquals(2, encounter.getProvidersByRole(role, true).size());
+		Assert.assertEquals(2, encounter.getProvidersByRole(role, true).size());
 		
 		//should contain both the first (voided) and second (non voided) providers
-		assertTrue(encounter.getProvidersByRole(role, true).containsAll(Arrays.asList(provider1, provider2)));
+		Assert.assertTrue(encounter.getProvidersByRole(role, true).containsAll(Arrays.asList(provider1, provider2)));
 	}
 	
 	/**
@@ -1276,19 +1225,19 @@ public class EncounterTest extends BaseContextMockTest {
 		
 		encounter.addProvider(role, provider);
 		
-		assertEquals(1, encounter.getProvidersByRole(role).size());
-		assertTrue(encounter.getProvidersByRole(role).contains(provider));
+		Assert.assertEquals(1, encounter.getProvidersByRole(role).size());
+		Assert.assertTrue(encounter.getProvidersByRole(role).contains(provider));
 		
 		encounter.removeProvider(role, provider);
 		
 		//the size should be 0 for non voided providers
-		assertEquals(0, encounter.getProvidersByRole(role).size());
+		Assert.assertEquals(0, encounter.getProvidersByRole(role).size());
 		
 		//the size should be 1 if we include voided providers
-		assertEquals(1, encounter.getProvidersByRole(role, true).size());
+		Assert.assertEquals(1, encounter.getProvidersByRole(role, true).size());
 		
 		//should contain the voided provider
-		assertTrue(encounter.getProvidersByRole(role, true).contains(provider));
+		Assert.assertTrue(encounter.getProvidersByRole(role, true).contains(provider));
 	}
 	
 	/**
@@ -1324,35 +1273,35 @@ public class EncounterTest extends BaseContextMockTest {
 		
 		Encounter encounterCopy = encounter.copyAndAssignToAnotherPatient(patient);
 		
-		assertNotEquals(encounter, encounterCopy);
+		Assert.assertNotEquals(encounter, encounterCopy);
 		
-		assertEquals(encounter.getCreator(), encounterCopy.getCreator());
-		assertEquals(encounter.getDateCreated(), encounterCopy.getDateCreated());
-		assertEquals(encounter.getChangedBy(), encounterCopy.getChangedBy());
-		assertEquals(encounter.getDateChanged(), encounterCopy.getDateChanged());
-		assertEquals(encounter.getVoided(), encounterCopy.getVoided());
-		assertEquals(encounter.getVoidReason(), encounterCopy.getVoidReason());
-		assertEquals(encounter.getDateVoided(), encounterCopy.getDateVoided());
+		Assert.assertEquals(encounter.getCreator(), encounterCopy.getCreator());
+		Assert.assertEquals(encounter.getDateCreated(), encounterCopy.getDateCreated());
+		Assert.assertEquals(encounter.getChangedBy(), encounterCopy.getChangedBy());
+		Assert.assertEquals(encounter.getDateChanged(), encounterCopy.getDateChanged());
+		Assert.assertEquals(encounter.getVoided(), encounterCopy.getVoided());
+		Assert.assertEquals(encounter.getVoidReason(), encounterCopy.getVoidReason());
+		Assert.assertEquals(encounter.getDateVoided(), encounterCopy.getDateVoided());
 		
-		assertEquals(encounter.getEncounterDatetime(), encounterCopy.getEncounterDatetime());
-		assertEquals(encounter.getEncounterType(), encounterCopy.getEncounterType());
-		assertEquals(encounter.getForm(), encounterCopy.getForm());
-		assertEquals(encounter.getLocation(), encounterCopy.getLocation());
+		Assert.assertEquals(encounter.getEncounterDatetime(), encounterCopy.getEncounterDatetime());
+		Assert.assertEquals(encounter.getEncounterType(), encounterCopy.getEncounterType());
+		Assert.assertEquals(encounter.getForm(), encounterCopy.getForm());
+		Assert.assertEquals(encounter.getLocation(), encounterCopy.getLocation());
 		
-		assertEquals(1, encounter.getObs().size());
-		assertEquals(1, encounterCopy.getObs().size());
-		assertEquals(1, encounter.getOrders().size());
-		assertEquals(0, encounterCopy.getOrders().size());
+		Assert.assertEquals(1, encounter.getObs().size());
+		Assert.assertEquals(1, encounterCopy.getObs().size());
+		Assert.assertEquals(1, encounter.getOrders().size());
+		Assert.assertEquals(0, encounterCopy.getOrders().size());
 		
-		assertEquals(1, encounter.getProvidersByRole(encounterRole).size());
-		assertEquals(1, encounterCopy.getProvidersByRole(encounterRole).size());
-		assertTrue(encounter.getProvidersByRole(encounterRole).containsAll(
+		Assert.assertEquals(1, encounter.getProvidersByRole(encounterRole).size());
+		Assert.assertEquals(1, encounterCopy.getProvidersByRole(encounterRole).size());
+		Assert.assertEquals(true, encounter.getProvidersByRole(encounterRole).containsAll(
 		    encounterCopy.getProvidersByRole(encounterRole)));
 		
-		assertNotNull(encounter.getVisit());
-		assertNull(encounterCopy.getVisit());
+		Assert.assertNotNull(encounter.getVisit());
+		Assert.assertNull(encounterCopy.getVisit());
 		
-		assertEquals(patient, encounterCopy.getPatient());
+		Assert.assertEquals(patient, encounterCopy.getPatient());
 	}
 
 	/**
@@ -1367,19 +1316,19 @@ public class EncounterTest extends BaseContextMockTest {
 
 		encounter.addProvider(role, provider);
 
-		assertEquals(1, encounter.getProvidersByRole(role).size());
-		assertTrue(encounter.getProvidersByRole(role).contains(provider));
+		Assert.assertEquals(1, encounter.getProvidersByRole(role).size());
+		Assert.assertTrue(encounter.getProvidersByRole(role).contains(provider));
 
 		encounter.removeProvider(role, provider);
 
 		//the size should be 0 for non voided providers
-		assertEquals(0, encounter.getProvidersByRole(role).size());
+		Assert.assertEquals(0, encounter.getProvidersByRole(role).size());
 
 		encounter.addProvider(role, provider);
-		assertEquals(1, encounter.getProvidersByRole(role).size());
+		Assert.assertEquals(1, encounter.getProvidersByRole(role).size());
 
 		encounter.removeProvider(role, provider);
-		assertEquals(0, encounter.getProvidersByRole(role).size());
+		Assert.assertEquals(0, encounter.getProvidersByRole(role).size());
 
 	}
 
@@ -1401,7 +1350,7 @@ public class EncounterTest extends BaseContextMockTest {
 		
 		encounter.setDiagnoses(diagnoses);
 		
-		assertTrue(encounter.hasDiagnosis(diagnosis));
+		Assert.assertTrue(encounter.hasDiagnosis(diagnosis));
 	}
 
 	/**
@@ -1419,7 +1368,7 @@ public class EncounterTest extends BaseContextMockTest {
 		Set<Diagnosis> diagnoses = new HashSet<>();
 		encounter.setDiagnoses(diagnoses);
 
-		assertFalse(encounter.hasDiagnosis(diagnosis));
+		Assert.assertFalse(encounter.hasDiagnosis(diagnosis));
 	}
 
 	/**

@@ -121,4 +121,12 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper {
 		//called, leading to the browser's waiting for more data than what we actually
 		//have for the compressed output, hence slowing down the response. TRUNK-5978
 	}
+	
+	public void setContentLength(int length) {
+		//Intentionally left blank to ignore whatever length the caller sets, because
+		//we are going to zip the response and hence end up with a smaller length.
+		//Without this empty method, the base class's setContentLength() method will be
+		//called, leading to the browser's waiting for more data than what we actually
+		//have for the compressed output, hence slowing down the response. TRUNK-5978
+	}
 }

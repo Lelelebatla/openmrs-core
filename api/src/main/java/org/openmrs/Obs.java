@@ -374,7 +374,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * {@link #hasGroupMembers(boolean)} with value true.
 	 * 
 	 * @return true if this is the parent group of other obs
-	 * <strong>Should</strong> not include voided obs
+	 * @should not include voided obs
 	 */
 	public boolean hasGroupMembers() {
 		return hasGroupMembers(false);
@@ -387,7 +387,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * 
 	 * @param includeVoided determines if Voided members should be considered as group members.
 	 * @return true if this is the parent group of other Obs
-	 * <strong>Should</strong> return true if this obs has group members based on parameter
+	 * @should return true if this obs has group members based on parameter
 	 */
 	public boolean hasGroupMembers(boolean includeVoided) {
 		// ! symbol used because if it's not empty, we want true
@@ -418,7 +418,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * 
 	 * @param includeVoided
 	 * @return the set of group members in this obs group
-	 * <strong>Should</strong> Get all group members if passed true, and non-voided if passed false
+	 * @should Get all group members if passed true, and non-voided if passed false
 	 */
 	public Set<Obs> getGroupMembers(boolean includeVoided) {
 		if (includeVoided) {
@@ -443,10 +443,10 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * @param groupMembers the groupedObs to set
 	 * @see #addGroupMember(Obs)
 	 * @see #hasGroupMembers()
-	 * <strong>Should</strong> mark the obs as dirty when the set is changed from null to a non empty one
-	 * <strong>Should</strong> not mark the obs as dirty when the set is changed from null to an empty one
-	 * <strong>Should</strong> mark the obs as dirty when the set is replaced with another with different members
-	 * <strong>Should</strong> not mark the obs as dirty when the set is replaced with another with same members
+	 * @should mark the obs as dirty when the set is changed from null to a non empty one
+	 * @should not mark the obs as dirty when the set is changed from null to an empty one
+	 * @should mark the obs as dirty when the set is replaced with another with different members
+	 * @should not mark the obs as dirty when the set is replaced with another with same members
 	 */
 	public void setGroupMembers(Set<Obs> groupMembers) {
 		//Copy over the entire list
@@ -461,8 +461,8 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * @param member Obs to add to this group
 	 * @see #setGroupMembers(Set)
 	 * @see #getGroupMembers()
-	 * <strong>Should</strong> return true when a new obs is added as a member
-	 * <strong>Should</strong> return false when a duplicate obs is added as a member
+	 * @should return true when a new obs is added as a member
+	 * @should return false when a duplicate obs is added as a member
 	 */
 	public void addGroupMember(Obs member) {
 		if (member == null) {
@@ -490,8 +490,8 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * @param member Obs to remove from this group
 	 * @see #setGroupMembers(Set)
 	 * @see #getGroupMembers()
-	 * <strong>Should</strong> return true when an obs is removed
-	 * <strong>Should</strong> return false when a non existent obs is removed
+	 * @should return true when an obs is removed
+	 * @should return false when a non existent obs is removed
 	 */
 	public void removeGroupMember(Obs member) {
 		if (member == null || getGroupMembers() == null) {
@@ -633,9 +633,9 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * Coerces a value to a Boolean representation
 	 * 
 	 * @return Boolean representation of the obs value
-	 * <strong>Should</strong> return true for value_numeric concepts if value is 1
-	 * <strong>Should</strong> return false for value_numeric concepts if value is 0
-	 * <strong>Should</strong> return null for value_numeric concepts if value is neither 1 nor 0
+	 * @should return true for value_numeric concepts if value is 1
+	 * @should return false for value_numeric concepts if value is 0
+	 * @should return null for value_numeric concepts if value is neither 1 nor 0
 	 */
 	public Boolean getValueAsBoolean() {
 		
@@ -660,8 +660,8 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * Returns the boolean value if the concept of this obs is of boolean datatype
 	 * 
 	 * @return true or false if value is set otherwise null
-	 * <strong>Should</strong> return true if value coded answer concept is true concept
-	 * <strong>Should</strong> return false if value coded answer concept is false concept
+	 * @should return true if value coded answer concept is true concept
+	 * @should return false if value coded answer concept is false concept
 	 */
 	public Boolean getValueBoolean() {
 		if (getConcept() != null && valueCoded != null && getConcept().getDatatype().isBoolean()) {
@@ -835,7 +835,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	/**
 	 * @return Returns true if this Obs is complex.
 	 * @since 1.5
-	 * <strong>Should</strong> return true if the concept is complex
+	 * @should return true if the concept is complex
 	 */
 	public boolean isComplex() {
 		if (getConcept() != null) {
@@ -849,7 +849,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * Get the value for the ComplexData. This method is used by the ComplexObsHandler. The
 	 * valueComplex has two parts separated by a bar '|' character: part A) the title; and part B)
 	 * the URI. The title is the readable description of the valueComplex that is returned by
-	 * {@link Obs#getValueAsString(java.util.Locale)}. The URI is the location where the ComplexData is stored.
+	 * {@link Obs#getValueAsString()}. The URI is the location where the ComplexData is stored.
 	 * 
 	 * @return readable title and URI for the location of the ComplexData binary object.
 	 * @since 1.5
@@ -862,7 +862,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * Set the value for the ComplexData. This method is used by the ComplexObsHandler. The
 	 * valueComplex has two parts separated by a bar '|' character: part A) the title; and part B)
 	 * the URI. The title is the readable description of the valueComplex that is returned by
-	 * {@link Obs#getValueAsString(java.util.Locale)}. The URI is the location where the ComplexData is stored.
+	 * Obs.getValueAsString(). The URI is the location where the ComplexData is stored.
 	 * 
 	 * @param valueComplex readable title and URI for the location of the ComplexData binary object.
 	 * @since 1.5
@@ -932,15 +932,15 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * missing.
 	 *
 	 * @param locale locale for locale-specific depictions of value
-	 * <strong>Should</strong> return first part of valueComplex for complex obs
-	 * <strong>Should</strong> return first part of valueComplex for non null valueComplexes
-	 * <strong>Should</strong> return non precise values for NumericConcepts
-	 * <strong>Should</strong> return date in correct format
-	 * <strong>Should</strong> not return long decimal numbers as scientific notation
-	 * <strong>Should</strong> use commas or decimal places depending on locale
-	 * <strong>Should</strong> not use thousand separator
-	 * <strong>Should</strong> return regular number for size of zero to or greater than ten digits
-	 * <strong>Should</strong> return regular number if decimal places are as high as six
+	 * @should return first part of valueComplex for complex obs
+	 * @should return first part of valueComplex for non null valueComplexes
+	 * @should return non precise values for NumericConcepts
+	 * @should return date in correct format
+	 * @should not return long decimal numbers as scientific notation
+	 * @should use commas or decimal places depending on locale
+	 * @should not use thousand separator
+	 * @should return regular number for size of zero to or greater than ten digits
+	 * @should return regular number if decimal places are as high as six
 	 */
 	public String getValueAsString(Locale locale) {
 		// formatting for the return of numbers of type double
@@ -1058,12 +1058,14 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * Sets the value for the obs from a string depending on the datatype of the question concept
 	 *
 	 * @param s the string to coerce to a boolean
-	 * <strong>Should</strong> set value as boolean if the datatype of the question concept is boolean
-	 * <strong>Should</strong> fail if the value of the string is null
-	 * <strong>Should</strong> fail if the value of the string is empty
+	 * @should set value as boolean if the datatype of the question concept is boolean
+	 * @should fail if the value of the string is null
+	 * @should fail if the value of the string is empty
 	 */
 	public void setValueAsString(String s) throws ParseException {
-		log.debug("getConcept() == {}", getConcept());
+		if (log.isDebugEnabled()) {
+			log.debug("getConcept() == " + getConcept());
+		}
 		
 		if (getConcept() != null && !StringUtils.isBlank(s)) {
 			String abbrev = getConcept().getDatatype().getHl7Abbreviation();
@@ -1167,9 +1169,9 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 		markAsDirty(getDateCreated(), dateCreated);
 		super.setDateCreated(dateCreated);
 	}
-	
+
 	/**
-	 * @see org.openmrs.FormRecordable#setFormField(String,String)
+	 * @see org.openmrs.FormRecordable#setFormField(String, String)
 	 */
 	@Override
 	public void setFormField(String namespace, String formFieldPath) {
@@ -1185,17 +1187,17 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 *
 	 * @return true if not changed otherwise false
 	 * @since 2.0
-	 * <strong>Should</strong> return false when no change has been made
-	 * <strong>Should</strong> return true when any immutable field has been changed
-	 * <strong>Should</strong> return false when only mutable fields are changed
-	 * <strong>Should</strong> return true when an immutable field is changed from a null to a non null value
-	 * <strong>Should</strong> return true when an immutable field is changed from a non null to a null value
+	 * @should return false when no change has been made
+	 * @should return true when any immutable field has been changed
+	 * @should return false when only mutable fields are changed
+	 * @should return true when an immutable field is changed from a null to a non null value
+	 * @should return true when an immutable field is changed from a non null to a null value
 	 */
 	public boolean isDirty() {
 		return dirty;
 	}
 	
-	protected void markAsDirty(Object oldValue, Object newValue) {
+	private void markAsDirty(Object oldValue, Object newValue) {
 		//Should we ignore the case for Strings?
 		if (!isDirty() && obsId != null && !OpenmrsUtil.nullSafeEquals(oldValue, newValue)) {
 			dirty = true;

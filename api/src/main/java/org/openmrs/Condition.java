@@ -10,7 +10,6 @@
 package org.openmrs;
 
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
@@ -22,7 +21,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -45,7 +43,7 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue
 	@Column(name = "condition_id")
 	private Integer conditionId;
 	
@@ -110,8 +108,8 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 		this.verificationStatus = verificationStatus;
 		this.previousVersion = previousVersion;
 		this.additionalDetail = additionalDetail;
-		this.onsetDate = onsetDate != null ? new Date(onsetDate.getTime()) : null;
-		this.endDate = endDate != null ? new Date(endDate.getTime()) : null;
+		this.onsetDate = onsetDate;
+		this.endDate = endDate;
 		this.patient = patient;
 	}
 	
@@ -251,7 +249,7 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 	 *         set
 	 */
 	public Date getOnsetDate() {
-		return onsetDate != null ? (Date) onsetDate.clone() : null;
+		return onsetDate;
 	}
 	
 	/**
@@ -260,7 +258,7 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 	 * @param onsetDate the onset date of the condition to be set
 	 */
 	public void setOnsetDate(Date onsetDate) {
-		this.onsetDate = onsetDate != null ? new Date(onsetDate.getTime()) : null;
+		this.onsetDate = onsetDate;
 	}
 	
 	/**
@@ -269,7 +267,7 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 	 * @return endDate - a date object that shows the end date of the condition
 	 */
 	public Date getEndDate() {
-		return endDate != null ? (Date) endDate.clone() : null;
+		return endDate;
 	}
 	
 	/**
@@ -278,7 +276,7 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 	 * @param endDate the end date to be set for the condition
 	 */
 	public void setEndDate(Date endDate) {
-		this.endDate = endDate != null ? new Date(endDate.getTime()) : null;
+		this.endDate = endDate;
 	}
 	
 	/**
@@ -352,5 +350,5 @@ public class Condition extends BaseFormRecordableOpenmrsData {
 	public void setEncounter(Encounter encounter) {
 		this.encounter = encounter;
 	}
-			
+	
 }

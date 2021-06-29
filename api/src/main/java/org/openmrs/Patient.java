@@ -34,7 +34,6 @@ public class Patient extends Person {
 	
 	@ContainedIn
 	private Set<PatientIdentifier> identifiers;
-
 	
 	// Constructors
 	
@@ -100,9 +99,6 @@ public class Patient extends Person {
 	 * @return internal identifier for patient
 	 */
 	public Integer getPatientId() {
-		if (this.patientId == null) {
-			this.patientId = getPersonId();
-		}
 		return this.patientId;
 	}
 	
@@ -122,7 +118,7 @@ public class Patient extends Person {
 	 * 
 	 * @return current allargy status for patient
 	 * @since 2.0
-	 * <strong>Should</strong> return allergy status maintained by the supporting infrastructure
+	 * @should return allergy status maintained by the supporting infrastructure
 	 */
 	public String getAllergyStatus() {
 		return this.allergyStatus;
@@ -134,7 +130,7 @@ public class Patient extends Person {
 	 * 
 	 * @param allergyStatus
 	 * @since 2.0
-	 * <strong>Should</strong> not be called by service client
+	 * @should not be called by service client
 	 */
 	public void setAllergyStatus(String allergyStatus) {
 		this.allergyStatus = allergyStatus;
@@ -159,7 +155,7 @@ public class Patient extends Person {
 	 * @return Set of all known identifiers for this patient
 	 * @see org.openmrs.PatientIdentifier
 	 * @see #getActiveIdentifiers()
-	 * <strong>Should</strong> not return null
+	 * @should not return null
 	 */
 	public Set<PatientIdentifier> getIdentifiers() {
 		if (identifiers == null) {
@@ -178,7 +174,7 @@ public class Patient extends Person {
 	public void setIdentifiers(Set<PatientIdentifier> identifiers) {
 		this.identifiers = identifiers;
 	}
-
+	
 	/**
 	 * Adds this PatientIdentifier if the patient doesn't contain it already
 	 * 
@@ -199,9 +195,9 @@ public class Patient extends Person {
 	 * Will add this PatientIdentifier if the patient doesn't contain it already
 	 * 
 	 * @param patientIdentifier
-	 * <strong>Should</strong> not fail with null identifiers list
-	 * <strong>Should</strong> add identifier to current list
-	 * <strong>Should</strong> not add identifier that is in list already
+	 * @should not fail with null identifiers list
+	 * @should add identifier to current list
+	 * @should not add identifier that is in list already
 	 */
 	public void addIdentifier(PatientIdentifier patientIdentifier) {
 		if (patientIdentifier != null) {
@@ -224,7 +220,7 @@ public class Patient extends Person {
 	 * <code>patientIdentifier</code> is null, nothing is done.
 	 * 
 	 * @param patientIdentifier the identifier to remove
-	 * <strong>Should</strong> remove identifier if exists
+	 * @should remove identifier if exists
 	 */
 	public void removeIdentifier(PatientIdentifier patientIdentifier) {
 		if (patientIdentifier != null) {
@@ -336,7 +332,7 @@ public class Patient extends Person {
 	 * 
 	 * @return list of non-voided identifiers for this patient
 	 * @see #getIdentifiers()
-	 * <strong>Should</strong> return preferred identifiers first in the list
+	 * @should return preferred identifiers first in the list
 	 */
 	public List<PatientIdentifier> getActiveIdentifiers() {
 		List<PatientIdentifier> ids = new ArrayList<>();
@@ -404,5 +400,4 @@ public class Patient extends Person {
 	public Person getPerson() {
 		return this;
 	}
-	
 }

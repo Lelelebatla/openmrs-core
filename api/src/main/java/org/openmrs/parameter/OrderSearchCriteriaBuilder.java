@@ -9,7 +9,11 @@
  */
 package org.openmrs.parameter;
 
-import org.openmrs.*;
+import org.openmrs.CareSetting;
+import org.openmrs.Concept;
+import org.openmrs.OrderType;
+import org.openmrs.Patient;
+import org.openmrs.Order;
 
 import java.util.Collection;
 import java.util.Date;
@@ -138,7 +142,7 @@ public class OrderSearchCriteriaBuilder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param autoExpireOnOrBeforeDate
 	 * @return this builder instance
 	 */

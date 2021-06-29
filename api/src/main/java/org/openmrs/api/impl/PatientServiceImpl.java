@@ -9,18 +9,6 @@
  */
 package org.openmrs.api.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Allergen;
 import org.openmrs.Allergies;
@@ -73,6 +61,19 @@ import org.openmrs.validator.PatientIdentifierValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of the patient service. This class should not be used on its own. The
@@ -632,7 +633,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 			if (!pp.getVoided()) {
 				PatientProgram enroll = pp.copy();
 				enroll.setPatient(preferred);
-				log.debug("Copying patientProgram {} to {}", pp.getPatientProgramId(), preferred.getPatientId());
+				log.debug("Copying patientProgram " + pp.getPatientProgramId() + " to " + preferred.getPatientId());
 				PatientProgram persisted = programService.savePatientProgram(enroll);
 				mergedData.addCreatedProgram(persisted.getUuid());
 			}
@@ -646,7 +647,9 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		VisitService visitService = Context.getVisitService();
 		
 		for (Visit visit : visitService.getVisitsByPatient(notPreferred, true, true)) {
-			log.debug("Merging visit {} to {}", visit.getVisitId(), preferred.getPatientId());
+			if (log.isDebugEnabled()) {
+				log.debug("Merging visit " + visit.getVisitId() + " to " + preferred.getPatientId());
+			}
 			visit.setPatient(preferred);
 			Visit persisted = visitService.saveVisit(visit);
 			mergedData.addMovedVisit(persisted.getUuid());
@@ -1630,5 +1633,11 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		if ("true".equalsIgnoreCase(locked)) {
 			throw new PatientIdentifierTypeLockedException();
 		}
+	}
+
+	@Override
+	public List<Patient> getPatientsByGivenName(String name) {
+		// TODO: you should implement this method by using an underlying method provided by PatientDAO to fetch a list of patients, and then apply your own filtering logic
+		return null;
 	}
 }

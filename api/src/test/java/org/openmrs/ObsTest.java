@@ -9,17 +9,17 @@
  */
 package org.openmrs;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -35,7 +35,8 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 import org.openmrs.api.APIException;
 import org.openmrs.obs.ComplexData;
 import org.openmrs.util.Reflect;
@@ -93,8 +94,8 @@ public class ObsTest {
 			Object newFieldValue = generateValue(field, setAlternateValue);
 			//sanity check
 			if (setAlternateValue) {
-				assertNotEquals(oldFieldValue,
-					newFieldValue, "The old and new values should be different for field: Obs." + field.getName());
+				assertNotEquals("The old and new values should be different for field: Obs." + field.getName(),
+				    oldFieldValue, newFieldValue);
 			}
 			
 			field.set(obs, newFieldValue);
@@ -163,13 +164,14 @@ public class ObsTest {
 		// check duplicate add. should only be one
 		obsGroup.addGroupMember(obs);
 		assertTrue(obsGroup.hasGroupMembers(false));
-		assertEquals(1, obsGroup.getGroupMembers().size(), "Duplicate add should not increase the grouped obs size");
+		assertEquals("Duplicate add should not increase the grouped obs size", 1, obsGroup.getGroupMembers().size());
 		
 		Obs obs2 = new Obs(2);
 		
 		obsGroup.removeGroupMember(obs2);
 		assertTrue(obsGroup.hasGroupMembers(false));
-		assertEquals(1, obsGroup.getGroupMembers().size(), "Removing a non existent obs should not decrease the number of grouped obs");
+		assertEquals("Removing a non existent obs should not decrease the number of grouped obs", 1, obsGroup
+		        .getGroupMembers().size());
 		
 		// testing removing an obs from a group that has a null obs list
 		new Obs().removeGroupMember(obs2);
@@ -179,7 +181,13 @@ public class ObsTest {
 		assertEquals(0, obsGroup.getGroupMembers().size());
 		
 		// try to add an obs group to itself
-		assertThrows(APIException.class, () -> obsGroup.addGroupMember(obsGroup));
+		try {
+			obsGroup.addGroupMember(obsGroup);
+			fail("An APIException about adding an obsGroup should have been thrown");
+		}
+		catch (APIException e) {
+			// this exception is expected
+		}
 	}
 	
 	/**
@@ -303,25 +311,25 @@ public class ObsTest {
 		Obs obs = new Obs();
 		obs.setConcept(complexConcept);
 		
-		assertTrue(obs.isComplex());
+		Assert.assertTrue(obs.isComplex());
 	}
 	
 	/**
 	 * @see Obs#setValueAsString(String)
 	 */
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void setValueAsString_shouldFailIfTheValueOfTheStringIsEmpty() throws Exception {
 		Obs obs = new Obs();
-		assertThrows(RuntimeException.class, () -> obs.setValueAsString(""));
+		obs.setValueAsString("");
 	}
 	
 	/**
 	 * @see Obs#setValueAsString(String)
 	 */
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void setValueAsString_shouldFailIfTheValueOfTheStringIsNull() throws Exception {
 		Obs obs = new Obs();
-		assertThrows(RuntimeException.class, () -> obs.setValueAsString(null));
+		obs.setValueAsString(null);
 	}
 	
 	/**
@@ -331,7 +339,7 @@ public class ObsTest {
 	public void getValueAsBoolean_shouldReturnFalseForValue_numericConceptsIfValueIs0() throws Exception {
 		Obs obs = new Obs();
 		obs.setValueNumeric(0.0);
-		assertFalse(obs.getValueAsBoolean());
+		Assert.assertEquals(false, obs.getValueAsBoolean());
 	}
 	
 	/**
@@ -341,7 +349,7 @@ public class ObsTest {
 	public void getValueAsBoolean_shouldReturnNullForValue_numericConceptsIfValueIsNeither1Nor0() throws Exception {
 		Obs obs = new Obs();
 		obs.setValueNumeric(24.8);
-		assertNull(obs.getValueAsBoolean());
+		Assert.assertNull(obs.getValueAsBoolean());
 	}
 	
 	@Test
@@ -355,7 +363,7 @@ public class ObsTest {
 		cn.setAllowDecimal(false);
 		obs.setConcept(cn);
 		String str = "25";
-		assertEquals(str, obs.getValueAsString(Locale.US));
+		Assert.assertEquals(str, obs.getValueAsString(Locale.US));
 	}
 	
 	@Test
@@ -363,7 +371,7 @@ public class ObsTest {
 		Obs obs = new Obs();
 		obs.setValueNumeric(123456789.0);
 		String str = "123456789.0";
-		assertEquals(str, obs.getValueAsString(Locale.US));
+		Assert.assertEquals(str, obs.getValueAsString(Locale.US));
 	}
 	
 	@Test
@@ -379,7 +387,7 @@ public class ObsTest {
 		Date utilDate = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = dateFormat.format(utilDate);
-		assertEquals(dateString, obs.getValueAsString(Locale.US));
+		Assert.assertEquals(dateString, obs.getValueAsString(Locale.US));
 	}
 	
 	/**
@@ -389,7 +397,7 @@ public class ObsTest {
 	public void getValueAsBoolean_shouldReturnTrueForValue_numericConceptsIfValueIs1() throws Exception {
 		Obs obs = new Obs();
 		obs.setValueNumeric(1.0);
-		assertTrue(obs.getValueAsBoolean());
+		Assert.assertEquals(true, obs.getValueAsBoolean());
 	}
 	
 	/**
@@ -406,11 +414,11 @@ public class ObsTest {
 		members.add(voided);
 		parent.setGroupMembers(members);
 		members = parent.getGroupMembers(true);
-		assertEquals(3, members.size(), "set of all members should have length of 3");
+		assertEquals("set of all members should have length of 3", 3, members.size());
 		members = parent.getGroupMembers(false);
-		assertEquals(2, members.size(), "set of non-voided should have length of 2");
+		assertEquals("set of non-voided should have length of 2", 2, members.size());
 		members = parent.getGroupMembers(); // should be same as false
-		assertEquals(2, members.size(), "default should return non-voided with length of 2");
+		assertEquals("default should return non-voided with length of 2", 2, members.size());
 	}
 	
 	/**
@@ -422,9 +430,9 @@ public class ObsTest {
 		Obs child = new Obs(33);
 		child.setVoided(true);
 		parent.addGroupMember(child); // Only contains 1 voided child
-		assertTrue(parent.hasGroupMembers(true), "When checking for all members, should return true");
-		assertFalse(parent.hasGroupMembers(false), "When checking for non-voided, should return false");
-		assertFalse(parent.hasGroupMembers(), "Default should check for non-voided");
+		assertTrue("When checking for all members, should return true", parent.hasGroupMembers(true));
+		assertFalse("When checking for non-voided, should return false", parent.hasGroupMembers(false));
+		assertFalse("Default should check for non-voided", parent.hasGroupMembers());
 	}
 	
 	/**
@@ -436,7 +444,7 @@ public class ObsTest {
 		Obs child = new Obs(33);
 		child.setVoided(true);
 		parent.addGroupMember(child);
-		assertTrue(parent.isObsGrouping(), "When checking for Obs grouping, should include voided Obs");
+		assertTrue("When checking for Obs grouping, should include voided Obs", parent.isObsGrouping());
 	}
 	
 	/**
@@ -447,7 +455,7 @@ public class ObsTest {
 		Obs obs = new Obs();
 		obs.setValueNumeric(123456789.3);
 		String str = "123456789,3";
-		assertEquals(str, obs.getValueAsString(Locale.GERMAN));
+		Assert.assertEquals(str, obs.getValueAsString(Locale.GERMAN));
 	}
 	
 	/**
@@ -458,7 +466,7 @@ public class ObsTest {
 		Obs obs = new Obs();
 		obs.setValueNumeric(123456789.0);
 		String str = "123456789.0";
-		assertEquals(str, obs.getValueAsString(Locale.ENGLISH));
+		Assert.assertEquals(str, obs.getValueAsString(Locale.ENGLISH));
 	}
 	
 	/**
@@ -469,7 +477,7 @@ public class ObsTest {
 		Obs obs = new Obs();
 		obs.setValueNumeric(1234567890.0);
 		String str = "1234567890.0";
-		assertEquals(str, obs.getValueAsString(Locale.ENGLISH));
+		Assert.assertEquals(str, obs.getValueAsString(Locale.ENGLISH));
 	}
 	
 	/**
@@ -480,7 +488,7 @@ public class ObsTest {
 		Obs obs = new Obs();
 		obs.setValueNumeric(123456789.012345);
 		String str = "123456789.012345";
-		assertEquals(str, obs.getValueAsString(Locale.ENGLISH));
+		Assert.assertEquals(str, obs.getValueAsString(Locale.ENGLISH));
 	}
 	
 	@Test
@@ -497,7 +505,7 @@ public class ObsTest {
 		obs.setConcept(cn);
 		obs.setValueCodedName(new ConceptName("True", Locale.US));
 		
-		assertEquals(VERO, obs.getValueAsString(Locale.ITALIAN));
+		Assert.assertEquals(VERO, obs.getValueAsString(Locale.ITALIAN));
 	}
 	
 	/**
@@ -561,7 +569,7 @@ public class ObsTest {
 			} else {
 				BeanUtils.setProperty(obs, fieldName, generateValue(field, true));
 			}
-			assertEquals(obs.isDirty(), assertion, "Obs was not marked as dirty after changing: " + fieldName);
+			assertEquals("Obs was not marked as dirty after changing: " + fieldName, obs.isDirty(), assertion);
 			if ("person".equals(fieldName)) {
 				//Because setPerson updates the personId we need to reset personId to its original value 
 				//that matches that of person otherwise the test will fail for the personId field
